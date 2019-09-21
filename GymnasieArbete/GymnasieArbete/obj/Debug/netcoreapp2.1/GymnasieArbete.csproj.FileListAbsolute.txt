@@ -1,0 +1,11 @@
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Debug\netcoreapp2.1\GymnasieArbete.csprojAssemblyReference.cache
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Debug\netcoreapp2.1\GymnasieArbete.csproj.CoreCompileInputs.cache
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Debug\netcoreapp2.1\GymnasieArbete.AssemblyInfoInputs.cache
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Debug\netcoreapp2.1\GymnasieArbete.AssemblyInfo.cs
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Debug\netcoreapp2.1\GymnasieArbete.deps.json
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Debug\netcoreapp2.1\GymnasieArbete.runtimeconfig.json
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Debug\netcoreapp2.1\GymnasieArbete.runtimeconfig.dev.json
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Debug\netcoreapp2.1\GymnasieArbete.dll
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Debug\netcoreapp2.1\GymnasieArbete.pdb
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Debug\netcoreapp2.1\GymnasieArbete.dll
+C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Debug\netcoreapp2.1\GymnasieArbete.pdb
