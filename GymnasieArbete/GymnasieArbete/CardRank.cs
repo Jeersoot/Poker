@@ -4,6 +4,7 @@ using System.Text;
 
 namespace GymnasieArbete
 {
+    // Gives every card combination in the cardranking a value
     enum CardRank
     {
         HighCard = 0,

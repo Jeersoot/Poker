@@ -49,19 +49,24 @@ namespace GymnasieArbete
 
         private void sortAndRank()
         {
+            // Assumes the hand is Straight Flush
             bool isFlush = true;
             bool isStraight = true;
 
-            // clear before sorting 
+            // Clear before sorting 
             pair1.Clear();
             pair2.Clear();
             set.Clear();
             quad.Clear();
-            // also default to lowest rank    
+            // Also default to lowest rank    
             cardRank = CardRank.HighCard;
 
-            // hand must be sorted
+            // Hand must be sorted
             hand.Sort((x, y) => x.getRank().CompareTo(y.getRank()));
+
+            /*
+             * Check if pair or similar (doesn't check Straight nor Flush)
+             */
 
             int i = 0;
             foreach (Card c1 in hand)
@@ -73,11 +78,13 @@ namespace GymnasieArbete
                 foreach (Card c2 in subList)
                 {
                     j++;
+                    // Checks if card1 (c1) and card2 (c2) has the same suit
                     if (c1.getSuit() != c2.getSuit())
                     {
                         isFlush = false;
                     }
 
+                    // Checks if c1 has a value of j lower than c2
                     if (c1.getRank() != c2.getRank() - j)
                     {
                         isStraight = false;
@@ -141,6 +148,7 @@ namespace GymnasieArbete
 
             if (isFlush && isStraight)
             {
+                // Checks if the last card is an Ace
                 if (hand[4].getRank() == 14)
                 {
                     cardRank = CardRank.RoyalFlush;
@@ -164,7 +172,9 @@ namespace GymnasieArbete
         {
             return cardRank;
         }
-
+        /*
+         * Skriver ut handen i en sorterad ordning
+         */
         public override string ToString()
         {
             String toRet = "";

@@ -5,6 +5,9 @@ using System.ComponentModel;
 
 namespace GymnasieArbete
 {
+    /* 
+     * Creates the card
+     */
     class Card
     {
 
@@ -18,6 +21,7 @@ namespace GymnasieArbete
         }
         public override String ToString()
         {
+            // Check if a card is a face card or no
             String toRet = "";
             switch (rank)
             {
@@ -38,6 +42,7 @@ namespace GymnasieArbete
                     toRet = suit.GetDescription() + "A";
                     break;
                 default:
+                    // Returning a number between 2 - 10
                     toRet =  suit.GetDescription() + rank;
                     break;
             }

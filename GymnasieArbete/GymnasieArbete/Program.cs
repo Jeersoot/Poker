@@ -6,15 +6,16 @@ namespace GymnasieArbete
 {
     class Program
     {
-
+        private static int FIVE_CARD_POKER = 5;
         static List<Card> cards = new List<Card>();
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            PokerGame game = new PokerGame();
-            bool replaceTrash = false; //Replaces Cards in hand
+
+            //bool replaceTrash = false; //Replaces Cards in hand
+
             // Test cases
             List<Card> twoPair = new List<Card>() { new Card(2, Suit.Club), new Card(2, Suit.Heart), new Card(4, Suit.Club), new Card(4, Suit.Heart), new Card(5, Suit.Heart) };
             List<Card> set = new List<Card>() { new Card(2, Suit.Club), new Card(2, Suit.Heart), new Card(2, Suit.Diamond), new Card(4, Suit.Heart), new Card(5, Suit.Heart) };
@@ -32,30 +33,46 @@ namespace GymnasieArbete
             //new Hand(straightFlush);
             //new Hand(royalFlush);
 
-           for (int loop = 0; loop < 10000; loop++)
-           //CardRank rank = CardRank.HighCard;
-            //while(rank != CardRank.RoyalFlush) //Goes until Royal Flush
+            CardDeck deck = new CardDeck();
+
+            CaribbeanStudPoker caribbean = new CaribbeanStudPoker();
+            OasisPoker oasis = new OasisPoker();
+
+            for (int i = 0; i < 100; i++)
             {
-                game.Shuffle();
+                Console.WriteLine("");
+                Player player1 = new Player("Caribbean " + i);
+                Player player2 = new Player("Oasis " + i);
 
-                while (game.hasMoreCards())
+                for (int loop = 0; loop < 10; loop++)
                 {
-                    Hand hand = new Hand(game.getDeal());
-                    Console.WriteLine(hand + "  " + hand.getRank() + "  ");
-                    if (replaceTrash)
-                    {
-                        game.replaceTrashCardsForHand(hand);
-                        Console.WriteLine(hand + "  " + hand.getRank());
-                    }
+                    deck.Shuffle();
+                    Hand playerHand = new Hand(deck.getCards(FIVE_CARD_POKER));
+                    Hand dealerHand = new Hand(deck.getCards(FIVE_CARD_POKER));
 
-                    //rank = hand.getRank();
-                    //if(rank == CardRank.RoyalFlush)
-                    //{
-                    //  break;    //Goes until Royal Flush
-                    //}
+                    caribbean.setHand(dealerHand);
+                    oasis.setHand(dealerHand);
+
+                    player1.setHand(playerHand);
+                    player2.setHand(playerHand);
+
+                    caribbean.play(player1);
+                    oasis.play(player2, deck);
                 }
 
+                Console.WriteLine(player1 + ":  wins = " + player1.getWins() + ", losses = " + player1.getLosses() + ", draws = " + player1.getDraws());
+                Console.WriteLine(player1 + ":  calls = " + player1.getCalls() + ", folds = " + player1.getFolds() + ", total balance = " + player1.getBalance());
+
+                Console.WriteLine(player2 + ":  wins = " + player2.getWins() + ", losses = " + player2.getLosses() + ", draws = " + player2.getDraws());
+                Console.WriteLine(player2 + ":  calls = " + player2.getCalls() + ", folds = " + player2.getFolds() + ", total balance = " + player2.getBalance());
+
             }
+            Console.WriteLine("");
+            Console.WriteLine("Casino:" + " wins = " + caribbean.getWins() + ", losses = " + caribbean.getLosses() + ", draws = " + caribbean.getDraws() + ", total balance = " + caribbean.getBalance());
+            Console.WriteLine("");
+            Console.WriteLine("Number of Folds = " + caribbean.getFolds() + ", Number of Calls = " + caribbean.getCalls() );
+            Console.WriteLine("");
+            Console.WriteLine("Number of Non Qualified games = " + caribbean.getNq());
         }
     }
 }
