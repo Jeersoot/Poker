@@ -65,6 +65,11 @@ namespace GymnasieArbete
             return 1;
         }
 
+        public void payCardReplacement(int a)
+        {
+            balance = balance - a;
+        }
+
         public int getCallBid()
         {
             calls++;

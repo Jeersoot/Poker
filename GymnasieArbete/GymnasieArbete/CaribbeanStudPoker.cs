@@ -17,8 +17,6 @@ namespace GymnasieArbete
         {
             dealerHand = h;
         }
-
-
         
         private int payOutTable(Hand hand)
         {
@@ -80,8 +78,8 @@ namespace GymnasieArbete
                     if (player.getHand().getRank() > dealerHand.getRank())
                     {
                         int odds = payOutTable(player.getHand());
-                        // Player wins, pay out bid * odds, plus initial ante and bid
-                        player.handlePayOut(odds * bid + ante + bid);
+                        // Player wins, pay out bid * odds, plus initial ante*2 and bid
+                        player.handlePayOut(odds * bid + ante*2 + bid);
                         // Casino loses
                         losses++;
                         Console.WriteLine(" win, odds = " + odds);
@@ -113,8 +111,8 @@ namespace GymnasieArbete
                         else if (res == -1)
                         {
                             int odds = payOutTable(player.getHand());
-                            //Player wins, pay out bid * odds, plus initial ante and bid
-                            player.handlePayOut(odds * bid + ante + bid);
+                            // Player wins, pay out bid * odds, plus initial ante*2 and bid
+                            player.handlePayOut(odds * bid + ante * 2 + bid);
                             //Casino lose
                             losses++;
                             Console.WriteLine(" win, odds = " + odds);
@@ -184,7 +182,7 @@ namespace GymnasieArbete
             return toRet;
         }
 
-        private void claim(int amount)
+        private protected void claim(int amount)
         {
             balance = balance + amount;
         }

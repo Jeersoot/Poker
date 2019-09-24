@@ -67,12 +67,26 @@ namespace GymnasieArbete
                 Console.WriteLine(player2 + ":  calls = " + player2.getCalls() + ", folds = " + player2.getFolds() + ", total balance = " + player2.getBalance());
 
             }
+            // Caribbean Stud Poker:
             Console.WriteLine("");
-            Console.WriteLine("Casino:" + " wins = " + caribbean.getWins() + ", losses = " + caribbean.getLosses() + ", draws = " + caribbean.getDraws() + ", total balance = " + caribbean.getBalance());
+            Console.WriteLine("Caribbean Stud Poker:");
+            Console.WriteLine("Casino: wins = " + caribbean.getWins() + ", losses = " + caribbean.getLosses() + ", draws = " + caribbean.getDraws());
+            Console.WriteLine("total balance = " + caribbean.getBalance());
             Console.WriteLine("");
-            Console.WriteLine("Number of Folds = " + caribbean.getFolds() + ", Number of Calls = " + caribbean.getCalls() );
+            Console.WriteLine("Number of Folds = " + caribbean.getFolds() + ", Number of Calls = " + caribbean.getCalls());
             Console.WriteLine("");
             Console.WriteLine("Number of Non Qualified games = " + caribbean.getNq());
+            Console.WriteLine("---------------------------");
+
+            // Oasis Poker:
+            Console.WriteLine("Oasis Poker:");
+            Console.WriteLine("");
+            Console.WriteLine("Casino:" + " wins = " + oasis.getWins() + ", losses = " + oasis.getLosses() + ", draws = " + oasis.getDraws());
+            Console.WriteLine("total balance = " + oasis.getBalance());
+            Console.WriteLine("");
+            Console.WriteLine("Number of Folds = " + oasis.getFolds() + ", Number of Calls = " + oasis.getCalls());
+            Console.WriteLine("");
+            Console.WriteLine("Number of Non Qualified games = " + oasis.getNq());
         }
     }
 }
