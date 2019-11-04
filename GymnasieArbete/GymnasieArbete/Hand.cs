@@ -12,44 +12,54 @@ namespace GymnasieArbete
         private List<Card> set = new List<Card>();
         private List<Card> quad = new List<Card>();
 
+
+        private Card upCard = null;
+
         private CardRank cardRank = CardRank.HighCard;
 
         public Hand(List<Card> h)
         {
             hand = h;
-            sortAndRank();
+            upCard = hand[0];
+            SortAndRank();
         }
 
-        public List<Card> getPair1(){
+        public List<Card> GetPair1()
+        {
             return pair1;
         }
-        public List<Card> getPair2()
+        public List<Card> GetPair2()
         {
             return pair2;
         }
-        public List<Card> getSet()
+        public List<Card> GetSet()
         {
             return set;
         }
-        public List<Card> getQuad()
+        public List<Card> GetQuad()
         {
             return quad;
         }
-        public List<Card> getHand()
+        public List<Card> GetHand()
         {
             return hand;
         }
 
-        public void setHand(List<Card> h)
+        public Card GetUpCard()
+        {
+            return upCard;
+        }
+
+        public void SetHand(List<Card> h)
         {
             hand.Clear();
             hand.AddRange(h);
-            sortAndRank();
+            SortAndRank();
         }
 
-        private void sortAndRank()
+        public void SortAndRank()
         {
-            // Assumes the hand is Straight Flush
+            // Assumes the hand is Straight or Flush
             bool isFlush = true;
             bool isStraight = true;
 
@@ -62,7 +72,7 @@ namespace GymnasieArbete
             cardRank = CardRank.HighCard;
 
             // Hand must be sorted
-            hand.Sort((x, y) => x.getRank().CompareTo(y.getRank()));
+            hand.Sort((x, y) => x.GetRank().CompareTo(y.GetRank()));
 
             /*
              * Check if pair or similar (doesn't check Straight nor Flush)
@@ -79,18 +89,18 @@ namespace GymnasieArbete
                 {
                     j++;
                     // Checks if card1 (c1) and card2 (c2) has the same suit
-                    if (c1.getSuit() != c2.getSuit())
+                    if (c1.GetSuit() != c2.GetSuit())
                     {
                         isFlush = false;
                     }
 
                     // Checks if c1 has a value of j lower than c2
-                    if (c1.getRank() != c2.getRank() - j)
+                    if (c1.GetRank() != c2.GetRank() - j)
                     {
                         isStraight = false;
                     }
 
-                    if (c1.getRank() == c2.getRank())
+                    if (c1.GetRank() == c2.GetRank())
                     {
                         switch (cardRank)
                         {
@@ -104,7 +114,7 @@ namespace GymnasieArbete
                                 }
                                 break;
                             case CardRank.Pair:
-                                if (!pair1.Contains(c2) && pair1[0].getRank() == c2.getRank())
+                                if (!pair1.Contains(c2) && pair1[0].GetRank() == c2.GetRank())
                                 {
                                     // Set
                                     cardRank = CardRank.Set;
@@ -120,7 +130,7 @@ namespace GymnasieArbete
                                 }
                                 break;
                             case CardRank.Set:
-                                if (!set.Contains(c2) && set[0].getRank() == c2.getRank())
+                                if (!set.Contains(c2) && set[0].GetRank() == c2.GetRank())
                                 {
                                     // Quads
                                     cardRank = CardRank.Quads;
@@ -128,7 +138,7 @@ namespace GymnasieArbete
                                     quad.Add(c2);
                                     set.Clear();
                                 }
-                                else if (set[0].getRank() != c2.getRank())
+                                else if (set[0].GetRank() != c2.GetRank())
                                 {
                                     // Full House
                                     cardRank = CardRank.FullHouse;
@@ -149,7 +159,7 @@ namespace GymnasieArbete
             if (isFlush && isStraight)
             {
                 // Checks if the last card is an Ace
-                if (hand[4].getRank() == 14)
+                if (hand[4].GetRank() == 14)
                 {
                     cardRank = CardRank.RoyalFlush;
                 }
@@ -168,7 +178,7 @@ namespace GymnasieArbete
             }
         }
 
-        public CardRank getRank()
+        public CardRank GetRank()
         {
             return cardRank;
         }
@@ -262,6 +272,56 @@ namespace GymnasieArbete
                     break;
             }
             return toRet;
+        }
+
+        /*
+         * OXXXX - A
+         * XOXXX - B
+         * XXOXX - C
+         * XXXOX - D 
+         * XXXX0 - E 
+         */
+        private void OneCardFromStraightOrFlush(Hand h)
+        {
+            // A
+            if(h.GetHand()[1].GetSuit() == h.GetHand()[2].GetSuit() &&
+                h.GetHand()[1].GetSuit() == h.GetHand()[3].GetSuit() &&
+                h.GetHand()[1].GetSuit() == h.GetHand()[4].GetSuit()) {
+
+            }
+
+            // B
+            if (h.GetHand()[0].GetSuit() == h.GetHand()[2].GetSuit() &&
+                h.GetHand()[0].GetSuit() == h.GetHand()[3].GetSuit() &&
+                h.GetHand()[0].GetSuit() == h.GetHand()[4].GetSuit())
+            {
+
+            }
+
+            // C
+            if (h.GetHand()[0].GetSuit() == h.GetHand()[1].GetSuit() &&
+                h.GetHand()[0].GetSuit() == h.GetHand()[3].GetSuit() &&
+                h.GetHand()[0].GetSuit() == h.GetHand()[4].GetSuit())
+            {
+
+            }
+
+            // D
+            if (h.GetHand()[0].GetSuit() == h.GetHand()[1].GetSuit() &&
+                h.GetHand()[0].GetSuit() == h.GetHand()[2].GetSuit() &&
+                h.GetHand()[0].GetSuit() == h.GetHand()[4].GetSuit())
+            {
+
+            }
+
+            // E
+            if (h.GetHand()[0].GetSuit() == h.GetHand()[1].GetSuit() &&
+                h.GetHand()[0].GetSuit() == h.GetHand()[2].GetSuit() &&
+                h.GetHand()[0].GetSuit() == h.GetHand()[3].GetSuit())
+            {
+
+            }
+
         }
     }
 }

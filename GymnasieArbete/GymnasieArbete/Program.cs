@@ -14,7 +14,7 @@ namespace GymnasieArbete
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 
-            //bool replaceTrash = false; //Replaces Cards in hand
+            //Replaces Cards in hand
 
             // Test cases
             List<Card> twoPair = new List<Card>() { new Card(2, Suit.Club), new Card(2, Suit.Heart), new Card(4, Suit.Club), new Card(4, Suit.Heart), new Card(5, Suit.Heart) };
@@ -24,7 +24,9 @@ namespace GymnasieArbete
             List<Card> straight = new List<Card>() { new Card(2, Suit.Diamond), new Card(3, Suit.Club), new Card(4, Suit.Diamond), new Card(5, Suit.Club), new Card(6, Suit.Club) };
             List<Card> straightFlush = new List<Card>() { new Card(3, Suit.Club), new Card(4, Suit.Club), new Card(5, Suit.Club), new Card(6, Suit.Club), new Card(7, Suit.Club) };
             List<Card> royalFlush = new List<Card>() { new Card(10, Suit.Club), new Card(11, Suit.Club), new Card(12, Suit.Club), new Card(13, Suit.Club), new Card(14, Suit.Club) };
+            List<Card> testAce = new List<Card>() { new Card(14, Suit.Club), new Card(2, Suit.Club), new Card(3, Suit.Club), new Card(4, Suit.Club), new Card(5, Suit.Club) };
 
+            //new Hand(testAce);
             //new Hand(twoPair);
             //new Hand(set);
             //new Hand(quad);
@@ -47,46 +49,47 @@ namespace GymnasieArbete
                 for (int loop = 0; loop < 10; loop++)
                 {
                     deck.Shuffle();
-                    Hand playerHand = new Hand(deck.getCards(FIVE_CARD_POKER));
-                    Hand dealerHand = new Hand(deck.getCards(FIVE_CARD_POKER));
+                    Hand playerHand = new Hand(deck.GetCards(FIVE_CARD_POKER));
+                    Hand dealerHand = new Hand(deck.GetCards(FIVE_CARD_POKER));
 
-                    caribbean.setHand(dealerHand);
-                    oasis.setHand(dealerHand);
+                    caribbean.SetHand(dealerHand);
+                    oasis.SetHand(dealerHand);
 
-                    player1.setHand(playerHand);
-                    player2.setHand(playerHand);
+                    player1.SetHand(playerHand);
+                    player2.SetHand(playerHand);
 
-                    caribbean.play(player1);
-                    oasis.play(player2, deck);
+                    caribbean.Play(player1);
+                    CardDeck deckCopy = deck.Clone();
+                    oasis.Play(player2, deckCopy);
                 }
 
-                Console.WriteLine(player1 + ":  wins = " + player1.getWins() + ", losses = " + player1.getLosses() + ", draws = " + player1.getDraws());
-                Console.WriteLine(player1 + ":  calls = " + player1.getCalls() + ", folds = " + player1.getFolds() + ", total balance = " + player1.getBalance());
+                Console.WriteLine(player1 + ":  wins = " + player1.GetWins() + ", losses = " + player1.GetLosses() + ", draws = " + player1.GetDraws());
+                Console.WriteLine(player1 + ":  calls = " + player1.GetCalls() + ", folds = " + player1.GetFolds() + ", total balance = " + player1.GetBalance());
 
-                Console.WriteLine(player2 + ":  wins = " + player2.getWins() + ", losses = " + player2.getLosses() + ", draws = " + player2.getDraws());
-                Console.WriteLine(player2 + ":  calls = " + player2.getCalls() + ", folds = " + player2.getFolds() + ", total balance = " + player2.getBalance());
+                Console.WriteLine(player2 + ":  wins = " + player2.GetWins() + ", losses = " + player2.GetLosses() + ", draws = " + player2.GetDraws());
+                Console.WriteLine(player2 + ":  calls = " + player2.GetCalls() + ", folds = " + player2.GetFolds() + ", total balance = " + player2.GetBalance());
 
             }
             // Caribbean Stud Poker:
             Console.WriteLine("");
             Console.WriteLine("Caribbean Stud Poker:");
-            Console.WriteLine("Casino: wins = " + caribbean.getWins() + ", losses = " + caribbean.getLosses() + ", draws = " + caribbean.getDraws());
-            Console.WriteLine("total balance = " + caribbean.getBalance());
+            Console.WriteLine("Casino: wins = " + caribbean.GetWins() + ", losses = " + caribbean.GetLosses() + ", draws = " + caribbean.GetDraws());
+            Console.WriteLine("total balance = " + caribbean.GetBalance());
             Console.WriteLine("");
-            Console.WriteLine("Number of Folds = " + caribbean.getFolds() + ", Number of Calls = " + caribbean.getCalls());
+            Console.WriteLine("Number of Folds = " + caribbean.GetFolds() + ", Number of Calls = " + caribbean.GetCalls());
             Console.WriteLine("");
-            Console.WriteLine("Number of Non Qualified games = " + caribbean.getNq());
+            Console.WriteLine("Number of Non Qualified games = " + caribbean.GetNq());
             Console.WriteLine("---------------------------");
 
             // Oasis Poker:
             Console.WriteLine("Oasis Poker:");
             Console.WriteLine("");
-            Console.WriteLine("Casino:" + " wins = " + oasis.getWins() + ", losses = " + oasis.getLosses() + ", draws = " + oasis.getDraws());
-            Console.WriteLine("total balance = " + oasis.getBalance());
+            Console.WriteLine("Casino:" + " wins = " + oasis.GetWins() + ", losses = " + oasis.GetLosses() + ", draws = " + oasis.GetDraws());
+            Console.WriteLine("total balance = " + oasis.GetBalance());
             Console.WriteLine("");
-            Console.WriteLine("Number of Folds = " + oasis.getFolds() + ", Number of Calls = " + oasis.getCalls());
+            Console.WriteLine("Number of Folds = " + oasis.GetFolds() + ", Number of Calls = " + oasis.GetCalls());
             Console.WriteLine("");
-            Console.WriteLine("Number of Non Qualified games = " + oasis.getNq());
+            Console.WriteLine("Number of Non Qualified games = " + oasis.GetNq());
         }
     }
 }

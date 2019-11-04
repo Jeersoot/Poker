@@ -50,12 +50,13 @@ namespace GymnasieArbete
             return toRet;
         }
 
-        public int getRank()
+        public int GetRank()
         {
             return rank;
         }
 
-        public Suit getSuit()
+
+        public Suit GetSuit()
         {
             return suit;
         }

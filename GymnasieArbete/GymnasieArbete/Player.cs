@@ -20,83 +20,75 @@ namespace GymnasieArbete
             name = n;
         }
 
-        public void setHand(Hand h)
+        public void SetHand(Hand h)
         {
             hand = h;
         }
 
-        public Hand getHand()
+        public Hand GetHand()
         {
             return hand;
         }
 
-        public int getBalance()
+        public int GetBalance()
         {
             return balance;
         }
 
-        public int getWins()
+        public int GetWins()
         {
             return wins;
         }
 
-        public int getFolds()
+        public int GetFolds()
         {
             return folds;
         }
 
-        public int getDraws()
+        public int GetDraws()
         {
             return draws;
         }
-        public int getCalls()
+        public int GetCalls()
         {
             return calls;
         }
 
-        public int getLosses()
+        public int GetLosses()
         {
             return losses;
         }
 
-        public int getAnteBid()
-        {
-            balance = balance - 1;
-            return 1;
-        }
-
-        public void payCardReplacement(int a)
-        {
-            balance = balance - a;
-        }
-
-        public int getCallBid()
-        {
-            calls++;
-            balance = balance - 2;
-            return 2;
-        }
-
-        public void handleFold()
+        public void HandleFold()
         {
             folds++;
         }
 
-        public void handlePayOut(int a)
+        public void HandleWins()
         {
             wins++;
-            balance = balance + a;  
         }
 
-        public void handleDraw(int a)
+        public void HandleDraw()
         {
             draws++;
-            balance = balance + a;
         }
 
-        public void handleLoss()
+        public void HandleLoss()
         {
             losses++;
+        }
+        public void HandleCalls()
+        {
+            calls++;
+        }
+        public void Creditbalance(int b)
+        {
+            balance += b;
+        }
+        public void Debitbalance(int b)
+        {
+            balance -= b;
         }
 
         public override string ToString()

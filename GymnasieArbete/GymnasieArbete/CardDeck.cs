@@ -12,17 +12,21 @@ namespace GymnasieArbete
         public CardDeck()
         {
             deck = new List<Card>();
-            createCards();
+            CreateCards();
+        }
+
+        public CardDeck Clone()
+        {
+            return (CardDeck) this.MemberwiseClone();
         }
         public void Shuffle()
         {
             List<Card> shuffledDeck = new List<Card>();
 
             Random r = new Random();
-            int randomIndex = 0;
             while (deck.Count > 0)
             {
-                randomIndex = r.Next(0, deck.Count); //Choose a random object in the list
+                int randomIndex = r.Next(0, deck.Count);
                 shuffledDeck.Add(deck[randomIndex]); //add it to the new, random list
                 deck.RemoveAt(randomIndex); //remove to avoid duplicates
             }
@@ -34,7 +38,7 @@ namespace GymnasieArbete
             return deck;
         }
 
-        public List<Card> getCards(int count)
+        public List<Card> GetCards(int count)
         {
             //Checks how many new cards it is to be created
             List<Card> toRet = new List<Card>();
@@ -48,7 +52,7 @@ namespace GymnasieArbete
         /*
          * Creates the new cards
          */
-        private void createCards()
+        private void CreateCards()
         {
             foreach (Suit suit in Enum.GetValues(typeof(Suit)))
             {

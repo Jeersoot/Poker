@@ -13,31 +13,31 @@ namespace GymnasieArbete
         private protected int folds = 0;
         private protected int draws = 0;
         private protected int nq = 0;
-        public int getBalance()
+        public int GetBalance()
         {
             return balance;
         }
-        public int getWins()
+        public int GetWins()
         {
             return wins;
         }
-        public int getLosses()
+        public int GetLosses()
         {
             return losses;
         }
-        public int getDraws()
+        public int GetDraws()
         {
             return draws;
         }
-        public int getFolds()
+        public int GetFolds()
         {
             return folds;
         }
-        public int getCalls()
+        public int GetCalls()
         {
             return calls;
         }
-        public int getNq()
+        public int GetNq()
         {
             return nq;
         }
