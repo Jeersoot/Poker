@@ -50,7 +50,7 @@ namespace GymnasieArbete
          * Four to an outside straight with no pair.
          * 
          * The player will sometimes switch with any of the following:
-         * -- Not Implemented -- Four to a flush with a low pair (depends on the pair and dealer's up card).
+         * Four to a flush with a low pair (depends on the pair and dealer's up card).
          * Four to an inside straight with no pair (depends on the inside straight and dealer's up card).
          */
         private void ApplyCardSwitchPolicy(Hand h, Player player, CardDeck deck)
@@ -67,7 +67,7 @@ namespace GymnasieArbete
              * First, check if four to a flush
              */
             Hashtable flushMap = new Hashtable();
-            foreach (Card c in h.GetHand())
+            foreach (Card c in h.GetCards())
             {
                 if (flushMap.ContainsKey(c.GetSuit()))
                 {
@@ -97,17 +97,17 @@ namespace GymnasieArbete
             /**
              * Check if four to a straight
              */
-            Card card1 = h.GetHand()[0];
-            Card card2 = h.GetHand()[1];
-            Card card3 = h.GetHand()[2];
-            Card card4 = h.GetHand()[3];
-            Card card5 = h.GetHand()[4];
+            Card card1 = h.GetCards()[0];
+            Card card2 = h.GetCards()[1];
+            Card card3 = h.GetCards()[2];
+            Card card4 = h.GetCards()[3];
+            Card card5 = h.GetCards()[4];
             // OXXXX
             if (card2.GetRank() + 1 == card3.GetRank() &&
                 card3.GetRank() + 1 == card4.GetRank() &&
                 card4.GetRank() + 1 == card5.GetRank())
             {
-                // is outside straight
+                // Is outside straight
                 if (card2.GetRank() >= 3 && card5.GetRank() <= 12)
                 {
                     isOutSideStraight = true;
@@ -183,31 +183,31 @@ namespace GymnasieArbete
             if(switchCardForFlush != null && switchCardForStraight != null && 
                 switchCardForFlush == switchCardForStraight )
             {
-                // potential straight flush :-)
+                // Potential Straight Flush
                 DoSwitchCard(h, switchCardForFlush, player, deck);
             }
             else if (switchCardForFlush != null && h.GetRank() == CardRank.HighCard)
             {
-                // potential flush
+                // Potential Flush
                 DoSwitchCard(h, switchCardForFlush, player, deck);
             }
             else if (switchCardForStraight != null && h.GetRank() == CardRank.HighCard && isOutSideStraight)
             {
-                // potential outside straight 
+                // Potential Outside Straight 
                 DoSwitchCard(h, switchCardForStraight, player, deck);
             }
             else if (switchCardForStraight != null && h.GetRank() == CardRank.HighCard && !wantingDealersUp)
             {
-                // potential inside straight 
+                // Potential Inside Straight 
                 DoSwitchCard(h, switchCardForStraight, player, deck);
             }
         }
 
         private void DoSwitchCard(Hand hand, Card switchCard, Player player, CardDeck deck)
         {
-            hand.GetHand().Remove(switchCard);
-            hand.GetHand().Add(deck.GetCards(1)[0]);
-            hand.SortAndRank();
+            hand.GetCards().Remove(switchCard);
+            hand.GetCards().Add(deck.GetCards(1)[0]);
+            hand = SortAndRankHand(hand);
 
             balance += 1;
             player.Debitbalance(1);

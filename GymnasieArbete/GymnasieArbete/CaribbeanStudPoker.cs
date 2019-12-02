@@ -182,7 +182,7 @@ namespace GymnasieArbete
         {
 
         }
-
+       
         public void SetHand(Hand h)
         {
             dealerHand = h;
@@ -236,7 +236,7 @@ namespace GymnasieArbete
 
             Console.Write(player.GetHand() + "vs " + dealerHand + "- " + player.GetHand().GetRank() + " -");
 
-            //Now start to play
+            // Now start to play
             player.Debitbalance(ante);
             balance += ante;
 
@@ -270,13 +270,13 @@ namespace GymnasieArbete
                     }
                     else
                     {
-                        //Hands are e12aul. Compare card by card 
+                        // Hands are equal. Compare card by card 
                         int res = CompareHands(dealerHand, player.GetHand());
                         if(res == 1)
                         {
-                            //Player lose
+                            // Player lose
                             player.HandleLoss();
-                            //Casino wins
+                            // Casino wins
                             wins++;
                             Console.WriteLine(" loss");
                         }
@@ -287,13 +287,13 @@ namespace GymnasieArbete
                             player.Creditbalance(odds * bid + ante * 2 + bid);
                             player.HandleWins();
                             balance -= (odds * bid + ante * 2 + bid);
-                            //Casino lose
+                            // Casino lose
                             losses++;
                             Console.WriteLine(" win, odds = " + odds);
                         }
                         else
                         {
-                            //Return ante + bid
+                            // Return ante + bid
                             player.Creditbalance(ante + bid);
                             balance -= (ante + bid);
 
@@ -304,7 +304,7 @@ namespace GymnasieArbete
                 } 
                 else
                 {
-                    //Pay back bid and 2*ante
+                    // Pay back bid and 2*ante
                     player.Creditbalance(ante + ante + bid);
                     balance -= (ante + ante + bid);
                     nq++;
@@ -313,7 +313,7 @@ namespace GymnasieArbete
             }
             else
             {
-                //Player folds
+                // Player folds
                 player.HandleFold();
                 folds++;
                 Console.WriteLine(" fold");
@@ -330,7 +330,7 @@ namespace GymnasieArbete
             }
             else
             {
-                if (h.GetHand()[4].GetRank() == 14 && h.GetHand()[3].GetRank() == 13)
+                if (h.GetCards()[4].GetRank() == Card.ACE && h.GetCards()[3].GetRank() == Card.KING)
                 {
                     if (CallIfAceAndKing(h, dealerHand.GetUpCard()))
                     {
@@ -352,9 +352,9 @@ namespace GymnasieArbete
             else
             {
                 bool kingOrAce = false;
-                foreach (Card c in h.GetHand())
+                foreach (Card c in h.GetCards())
                 {
-                    if (c.GetRank() == 13 || c.GetRank() == 14)
+                    if (c.GetRank() == Card.KING || c.GetRank() == Card.ACE)
                     {
                         if (kingOrAce)
                         {
@@ -368,6 +368,7 @@ namespace GymnasieArbete
 
             return toRet;
         }
+
         private int CompareHands(Hand h1, Hand h2)
         {
             int toRet = 0;
@@ -377,11 +378,11 @@ namespace GymnasieArbete
                     toRet = 0;
                     break;
                 case CardRank.StraightFlush:
-                    if (h1.GetHand()[4].GetRank() > h2.GetHand()[4].GetRank())
+                    if (h1.GetCards()[4].GetRank() > h2.GetCards()[4].GetRank())
                     {
                         toRet = 1;
                     }
-                    else if (h1.GetHand()[4].GetRank() < h2.GetHand()[4].GetRank())
+                    else if (h1.GetCards()[4].GetRank() < h2.GetCards()[4].GetRank())
                     {
                         toRet = -1;
                     }
@@ -417,11 +418,11 @@ namespace GymnasieArbete
                     break;
                 case CardRank.Flush:
                 case CardRank.Straight:
-                    if (h1.GetHand()[0].GetRank() > h2.GetHand()[0].GetRank())
+                    if (h1.GetCards()[0].GetRank() > h2.GetCards()[0].GetRank())
                     {
                         toRet = 1;
                     }
-                    else if (h1.GetHand()[0].GetRank() < h2.GetHand()[0].GetRank())
+                    else if (h1.GetCards()[0].GetRank() < h2.GetCards()[0].GetRank())
                     {
                         toRet = -1;
                     }
@@ -469,12 +470,12 @@ namespace GymnasieArbete
                 case CardRank.HighCard:
                     for (int i = 4; i > 0; i--)
                     {
-                        if (h1.GetHand()[i].GetRank() > h2.GetHand()[i].GetRank())
+                        if (h1.GetCards()[i].GetRank() > h2.GetCards()[i].GetRank())
                         {
                             toRet = 1;
                             break;
                         }
-                        else if (h1.GetHand()[i].GetRank() < h2.GetHand()[i].GetRank())
+                        else if (h1.GetCards()[i].GetRank() < h2.GetCards()[i].GetRank())
                         {
                             toRet = -1;
                             break;
@@ -508,7 +509,7 @@ namespace GymnasieArbete
 
         private bool CallIfAceAndKing(Hand hand, Card dealersUp)
         {
-            String threeCardKey = hand.GetHand()[2].GetRank() + "-" + hand.GetHand()[1].GetRank() + "-" + hand.GetHand()[0].GetRank();
+            String threeCardKey = hand.GetCards()[2].GetRank() + "-" + hand.GetCards()[1].GetRank() + "-" + hand.GetCards()[0].GetRank();
             List<string> threeCardList = (List<string>)strategyMap[threeCardKey];
             String strategyCode = threeCardList[dealersUp.GetRank() - 2];
             bool toRet = false;
@@ -525,7 +526,7 @@ namespace GymnasieArbete
                 case "4":
                     // Raise if the suit of dealer's card matches the suit of at least x number of your cards.
                     int noOfSameSuit = 0;
-                    foreach (Card c in hand.GetHand())
+                    foreach (Card c in hand.GetCards())
                     {
                         if (dealersUp.GetSuit() == c.GetSuit())
                         {
@@ -543,7 +544,7 @@ namespace GymnasieArbete
                     }
                     catch (FormatException)
                     {
-                        // should never happen	
+                        // Should never happen	
                     }
                     toRet = false;
                     break;
