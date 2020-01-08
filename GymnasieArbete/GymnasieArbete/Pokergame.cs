@@ -6,13 +6,22 @@ namespace GymnasieArbete
 {
     class Pokergame
     {
-        private protected int balance = 0;
+        private int volume = 0;
+        private int balance = 0;
         private protected int wins = 0;
         private protected int losses = 0;
         private protected int calls = 0;
         private protected int folds = 0;
         private protected int draws = 0;
         private protected int nq = 0;
+        private protected int noFourCardQuad = 0;
+        private protected int noFourCardStraightFlush = 0;
+        private protected int noFourCardSet = 0;
+        private protected int noFourCardFlush = 0;
+        private protected int noFourCardTwoPair = 0;
+        private protected int noFourCardPair = 0;
+        private protected int noFourCardHighCard = 0;
+
         public int GetBalance()
         {
             return balance;
@@ -41,8 +50,58 @@ namespace GymnasieArbete
         {
             return nq;
         }
+        public int GetVolume()
+        {
+            return volume;
+        }
 
+        private protected void UpdateBalance(int a)
+        {
+            balance += a;
 
+            if (a > 0)
+            {
+                volume += a;
+            }
+        }
+
+        public String GetHousesEdge()
+        {
+           double edge =  Convert.ToDouble(balance) * 100 / Convert.ToDouble(volume);
+           return Math.Round(edge, 2).ToString() + "%";
+        }
+
+        // Collects the total number of times every combination is in a game
+        
+            // Four Card Poker
+        public int GetNoFourCardQuad() 
+        {
+            return noFourCardQuad;
+        }
+        public int GetNoFourCardStraightFlush()
+        {
+            return noFourCardStraightFlush;
+        }
+        public int GetNoFourCardSet() 
+        {
+            return noFourCardSet;
+        }
+        public int GetNoFourCardFlush() 
+        {
+            return noFourCardFlush;
+        }
+        public int GetNoFourCardTwoPair() 
+        {
+            return noFourCardTwoPair;
+        }
+        public int GetNoFourCardPair() 
+        {
+            return noFourCardPair;
+        }
+        public int GetNoFourCardHighCard() 
+        {
+            return noFourCardHighCard;
+        }
 
         public static Hand SortAndRankHand(Hand hand)
         {

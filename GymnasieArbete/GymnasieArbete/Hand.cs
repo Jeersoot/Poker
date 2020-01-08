@@ -19,7 +19,7 @@ namespace GymnasieArbete
         public Hand(List<Card> h)
         {
             hand = h;
-            upCard = hand[0];
+            upCard = hand[h.Count - 1];
         }
 
         public List<Card> GetPair1()

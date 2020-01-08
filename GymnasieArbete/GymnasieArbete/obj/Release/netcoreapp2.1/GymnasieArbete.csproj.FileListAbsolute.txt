@@ -3,7 +3,6 @@ C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Release\netcor
 C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Release\netcoreapp2.1\GymnasieArbete.runtimeconfig.dev.json
 C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Release\netcoreapp2.1\GymnasieArbete.dll
 C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\bin\Release\netcoreapp2.1\GymnasieArbete.pdb
-C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Release\netcoreapp2.1\GymnasieArbete.csproj.CoreCompileInputs.cache
 C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Release\netcoreapp2.1\GymnasieArbete.AssemblyInfoInputs.cache
 C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Release\netcoreapp2.1\GymnasieArbete.AssemblyInfo.cs
 C:\Users\Hule-Elev\source\repos\GymnasieArbete\GymnasieArbete\obj\Release\netcoreapp2.1\GymnasieArbete.dll

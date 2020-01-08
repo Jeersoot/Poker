@@ -7,20 +7,174 @@ namespace GymnasieArbete
     class FourCardPoker : Pokergame
     {
         private Hand dealerHand = null;
+        private bool playAcesUp = false;
 
         public FourCardPoker()
         {
-
+        }
+        public FourCardPoker(bool b)
+        {
+            playAcesUp = b;
         }
 
-      public void Play(Player player, CardDeck deck) 
+
+        public void Play(Player player, CardDeck deck)
         {
 
+            int ante = 1;
+            int bid;
 
-            //TODO
+            //Console.Write(player.GetHand() + "vs " + dealerHand + "- " + player.GetHand().GetRank() + " -");
 
+            // Now start to play
+            player.Debitbalance(ante);
+            UpdateBalance(ante);
 
+            bid = GetRaiseBet(player.GetHand());
+
+            if (bid > 0)
+            {
+                player.Debitbalance(bid);
+                player.HandleCalls();
+                calls++;
+                UpdateBalance(bid);
+
+                if (player.GetHand().GetRank() > dealerHand.GetRank())
+                {
+                    // Player wins, pay out bid 1-to-1, plus initial ante*2
+                    player.Creditbalance((bid + ante) * 2);
+                    player.HandleWins();
+                    UpdateBalance(-(bid + ante) * 2);
+                    // Casino loses
+                    losses++;
+                    //Console.Write(" win, bid = " + bid);
+                }
+                else if (player.GetHand().GetRank() < dealerHand.GetRank())
+                {
+                    // Player lose
+                    player.HandleLoss();
+
+                    // Casino wins
+                    wins++;
+                    //Console.Write(" loss, bid = " + bid);
+                }
+                else
+                {
+                    // Hands are equal. Compare card by card 
+                    int res = CompareHands(dealerHand, player.GetHand());
+                    if (res == 1)
+                    {
+                        // Player lose
+                        player.HandleLoss();
+                        // Casino wins
+                        wins++;
+                        //Console.Write(" loss, bid = " + bid);
+                    }
+                    else
+                    {
+                        player.Creditbalance((bid + ante) * 2);
+                        player.HandleWins();
+                        UpdateBalance(-(bid + ante) * 2);
+                        // Casino loses
+                        losses++;
+                        //Console.Write(" win, bid = " + bid);
+                    } 
+                }
+            }
+            else
+            {
+                // Player folds
+                player.HandleFold();
+                folds++;
+                //Console.Write(" fold");
+            }
+
+            if (playAcesUp) 
+            {
+                // If the player has a Pair of Aces or better, then he shall also be paid after the Aces Up Pay Table
+                int acesUp = AcesUpTable(player.GetHand());
+                player.Creditbalance(acesUp);
+                UpdateBalance(-(acesUp));
+
+                //Console.WriteLine(", Aces Up = " + acesUp + ", balance = " + GetBalance());
+            } 
+            
+            int  AcesUpTable(Hand hand)
+            {
+                int toRet = -1;
+                switch (hand.GetRank())
+                {
+                    case CardRank.FOURCARD_Quads:
+                        toRet = 50;
+                        break;
+                    case CardRank.FOURCARD_StraightFlush:
+                        toRet = 40;
+                        break;
+                    case CardRank.FOURCARD_Set:
+                        toRet = 8;
+                        break;
+                    case CardRank.FOURCARD_Flush:
+                        toRet = 5;
+                        break;
+                    case CardRank.FOURCARD_Straight:
+                        toRet = 4;
+                        break;
+                    case CardRank.FOURCARD_TwoPair:
+                        toRet = 3;
+                        break;
+                    case CardRank.FOURCARD_Pair:
+                        int playersPairRank = hand.GetPair1()[0].GetRank();
+                        if (playersPairRank == Card.ACE)
+                        {
+                            toRet = 1;
+                        }
+                        break;
+                    case CardRank.FOURCARD_HighCard:
+                        toRet = -1;
+                        break;
+                    default:
+                        break;
+                }
+                return toRet;
+            }
+
+            // If the player has at least a three of a kind, then he shall also be paid a Bonus, regardless of the value of the dealer's hand. 
+            if (player.GetHand().GetRank() >= CardRank.FOURCARD_Set)
+            {
+                int bonus = BonusTable(player.GetHand());
+                player.Creditbalance(bonus);
+                player.HandleWins();
+                UpdateBalance(-(bonus));
+                
+                //Console.WriteLine(", bonus = " + bonus);
+            } 
+            else
+            {
+                //Console.WriteLine(", no bonus");
+            }
         }
+
+        private int BonusTable(Hand hand)
+        {
+            int toRet = 0;
+            switch (hand.GetRank())
+            {
+                case CardRank.FOURCARD_Quads:
+                    toRet = 25;
+                    break;
+                case CardRank.FOURCARD_StraightFlush:
+                    toRet = 20;
+
+                    break;
+                case CardRank.FOURCARD_Set:
+                    toRet = 2;
+                    break;
+                default:
+                    break;
+            }
+             return toRet;
+        }
+
         /*
          *     1 - Pair of Aces or better: Bet 3X
          *     2 - Pair of Ks: Bet 3X, except bet 1X against an Ace and you don't have an Ace nor 4.
@@ -46,9 +200,12 @@ namespace GymnasieArbete
                         dealerHand.GetUpCard().GetRank() == Card.JACK)
                     {
                         toRet = 1; // 9
+                        //Console.Write("; Strategy case 9, dealersUp: " + dealerHand.GetUpCard() + ";"); 
+                       
                     } else
                     {
                         toRet = 0; // 10
+                        //Console.Write("; Strategy case 10, dealersUp: " + dealerHand.GetUpCard() + ";");
                     }
                     break;
                 case CardRank.FOURCARD_Pair:
@@ -57,13 +214,16 @@ namespace GymnasieArbete
                     if (playersPairRank == Card.ACE)
                     {
                         toRet = 3; // 1
+                        //Console.Write("; Strategy case 1, dealersUp: " + dealerHand.GetUpCard() + ";");
+
                     }
                     else if (playersPairRank >= Card.JACK)
                     {
                         bool dealersUpInPlayersHand = false;
                         if (dealerHand.GetUpCard().GetRank() < playersPairRank)
                         {
-                            toRet = 3; // 2, 3
+                            toRet = 3; // 2, 3   
+
                         }
                         else
                         {
@@ -76,18 +236,22 @@ namespace GymnasieArbete
                                     break;
                                 }
                             }
+                            toRet = dealersUpInPlayersHand ? 3 : 1;
                         }
-                        toRet = dealersUpInPlayersHand ? 3 : 1;
+                        //Console.Write("; Strategy case 2 or 3, dealersUp: " + dealerHand.GetUpCard() + ";");
                     }
                     else if (playersPairRank == Card.NINE || playersPairRank == Card.TEN)
                     {
-                        if (dealerHand.GetUpCard().GetRank() < playersPairRank)
+                        if (dealerHand.GetUpCard().GetRank() <= playersPairRank)
                         {
                             toRet = 3; // 4
+                            //Console.Write("; Strategy case 4, dealersUp: " + dealerHand.GetUpCard() + ";");
+
                         }
                         else
                         {
                             toRet = 1;
+                            //Console.Write("; Strategy case 4, dealersUp: " + dealerHand.GetUpCard() + ";");
                         }
                     }
                     else if (playersPairRank == Card.EIGHT)
@@ -95,33 +259,53 @@ namespace GymnasieArbete
                         if (dealerHand.GetUpCard().GetRank() == Card.TWO)
                         {
                             toRet = 3; // 5
+                            //Console.Write("; Strategy case 5, dealersUp: " + dealerHand.GetUpCard() + ";");
+
                         }
                         else
                         {
                             toRet = 1;
+                            //Console.Write("; Strategy case 5, dealersUp: " + dealerHand.GetUpCard() + ";");
                         }
                     }
                     else if (playersPairRank == Card.SEVEN ||
                       playersPairRank == Card.SIX ||
                       playersPairRank == Card.FIVE ||
                       playersPairRank == Card.FOUR)
-                    {
+                         {
                         toRet = 1; // 6
-                    }
+                        //Console.Write("; Strategy case 6, dealersUp: " + dealerHand.GetUpCard() + ";");
+                         }
+
                     else if (playersPairRank == Card.THREE)
                     {
                         toRet = 1; // 7
-                        if (dealerHand.GetUpCard().GetRank() == Card.JACK)
+                        //Console.Write("; Strategy case 7, dealersUp: " + dealerHand.GetUpCard() + ";");
+
+                        if (dealerHand.GetUpCard().GetRank() >= Card.JACK)
                         {
-                            if (hand.GetCards()[4].GetRank() <= Card.TEN)
+                            toRet = 0;
+                            for(int i = 3; i>=0; i--)
                             {
-                                toRet = 0;
+                                Card c = hand.GetCards()[i];
+                                if (hand.GetPair1().Contains(c))
+                                {
+                                    continue;
+                                } 
+                                
+                                if(c.GetRank() >= dealerHand.GetUpCard().GetRank())
+                                {
+                                    toRet = 1;
+                                    break;
+                                }
                             }
                         }
                     }
                     else if (playersPairRank == Card.TWO)
                     {
                         toRet = 0; // 8
+                        //Console.Write("; Strategy case 8, dealersUp: " + dealerHand.GetUpCard() + ";");
+
                         foreach (Card c in hand.GetCards())
                         {
                             if (c.GetRank() == dealerHand.GetUpCard().GetRank())
@@ -132,11 +316,13 @@ namespace GymnasieArbete
                     }
                     break;
                 case CardRank.FOURCARD_TwoPair:
+                case CardRank.FOURCARD_Flush:
                 case CardRank.FOURCARD_Set:
                 case CardRank.FOURCARD_Quads:
                 case CardRank.FOURCARD_Straight:
                 case CardRank.FOURCARD_StraightFlush:
                     toRet = 3;  // 1
+                    //Console.Write("; Strategy case 1, dealersUp: " + dealerHand.GetUpCard()+";");
                     break;
                 default:
                     toRet = 0;
@@ -156,28 +342,28 @@ namespace GymnasieArbete
             int toRet = 0;
             switch (hand.GetRank())
             {
-                case CardRank.Quads:
+                case CardRank.FOURCARD_Quads:
                     toRet = 50;
                     break;
-                case CardRank.StraightFlush:
+                case CardRank.FOURCARD_StraightFlush:
                     toRet = 40;
                     break;
-                case CardRank.Set:
+                case CardRank.FOURCARD_Set:
                     toRet = 9;
                     break;
-                case CardRank.Flush:
+                case CardRank.FOURCARD_Flush:
                     toRet = 6;
                     break;
-                case CardRank.Straight:
+                case CardRank.FOURCARD_Straight:
                     toRet = 4;
                     break;
-                case CardRank.TwoPair:
+                case CardRank.FOURCARD_TwoPair:
                     toRet = 2;
                     break;
-                case CardRank.Pair:
+                case CardRank.FOURCARD_Pair:
                     toRet = 1;
                     break;
-                case CardRank.HighCard:
+                case CardRank.FOURCARD_HighCard:
                     toRet = 1;
                     break;
                 default:
@@ -185,105 +371,8 @@ namespace GymnasieArbete
             }
             return toRet;
         }
-        public void Play(Player player)
-        {
-            int ante = 1;
-            int bid = 2;
-
-            Console.Write(player.GetHand() + "vs " + dealerHand + "- " + player.GetHand().GetRank() + " -");
-
-            // Now start to play
-            player.Debitbalance(ante);
-            balance += ante;
-
-            if (DoCall(player.GetHand()))
-            {
-                player.Debitbalance(bid);
-                player.HandleCalls();
-                balance += bid;
-
-                    if (player.GetHand().GetRank() > dealerHand.GetRank())
-                    {
-                        int odds = PayOutTable(player.GetHand());
-                        // Player wins, pay out bid * odds, plus initial ante*2 and bid
-                        player.Creditbalance(odds * bid + ante * 2 + bid);
-                        player.HandleWins();
-                        balance -= (odds * bid + ante * 2 + bid);
-                        // Casino loses
-                        losses++;
-                        Console.WriteLine(" win, odds = " + odds);
-                    }
-                    else if (player.GetHand().GetRank() < dealerHand.GetRank())
-                    {
-                        // Player lose
-                        player.HandleLoss();
-
-                        // Casino wins
-                        wins++;
-                        Console.WriteLine(" loss");
-                    }
-                    else
-                    {
-                        // Hands are equal. Compare card by card 
-                        int res = CompareHands(dealerHand, player.GetHand());
-                        if (res == 1)
-                        {
-                            // Player lose
-                            player.HandleLoss();
-                            // Casino wins
-                            wins++;
-                            Console.WriteLine(" loss");
-                        }
-                        else if (res == -1)
-                        {
-                            int odds = PayOutTable(player.GetHand());
-                            // Player wins, pay out bid * odds, plus initial ante*2 and bid
-                            player.Creditbalance(odds * bid + ante * 2 + bid);
-                            player.HandleWins();
-                            balance -= (odds * bid + ante * 2 + bid);
-                            // Casino lose
-                            losses++;
-                            Console.WriteLine(" win, odds = " + odds);
-                        }
-                        else
-                        {
-                            // Return ante + bid
-                            player.Creditbalance(ante + bid);
-                            balance -= (ante + bid);
-
-                            draws++;
-                            Console.WriteLine(" draw");
-                        }
-                    }
-            }
-            else
-            {
-                // Player folds
-                player.HandleFold();
-                folds++;
-                Console.WriteLine(" fold");
-            }
-        }
-
-        private bool DoCall(Hand h)
-        {
-            bool toRet = false;
-            if (h.GetRank() >= CardRank.Pair)
-            {
-                calls++;
-                toRet = true;
-            }
-            else
-            {
-                if (h.GetCards()[4].GetRank() == 14 && h.GetCards()[3].GetRank() == 13)
-                {
-                   toRet = true;
-                   calls++;
-                }
-            }
-            return toRet;
-        }
-
+ 
+ 
         private int CompareHands(Hand h1, Hand h2)
         {
             int toRet = 0;
@@ -300,11 +389,11 @@ namespace GymnasieArbete
                     }
                     break;
                 case CardRank.FOURCARD_StraightFlush:
-                    if (h1.GetCards()[4].GetRank() > h2.GetCards()[4].GetRank())
+                    if (h1.GetCards()[3].GetRank() > h2.GetCards()[3].GetRank())
                     {
                         toRet = 1;
                     }
-                    else if (h1.GetCards()[4].GetRank() < h2.GetCards()[4].GetRank())
+                    else if (h1.GetCards()[3].GetRank() < h2.GetCards()[3].GetRank())
                     {
                         toRet = -1;
                     }
@@ -375,7 +464,7 @@ namespace GymnasieArbete
                     }
                     break;
                 case CardRank.FOURCARD_HighCard:
-                    for (int i = 4; i > 0; i--)
+                    for (int i = 3; i > 0; i--)
                     {
                         if (h1.GetCards()[i].GetRank() > h2.GetCards()[i].GetRank())
                         {
@@ -394,23 +483,6 @@ namespace GymnasieArbete
                     break;
             }
 
-            //debugging purposes
-            
-            Console.Write(h1.GetRank() + "  ");
-
-            if (toRet == 0)
-            {
-                Console.WriteLine(h1 + "= " + h2);
-            }
-            else if (toRet == 1)
-            {
-                Console.WriteLine(h1 + "> " + h2);
-            }
-            else
-            {
-                Console.WriteLine(h1 + "< " + h2);
-            }
-            
             return toRet;
             
         }
@@ -578,8 +650,8 @@ namespace GymnasieArbete
             if(quads.Count == 4)
             {
                 hand.SetRank(CardRank.FOURCARD_Quads);
-                hand.GetQuad().AddRange(quads);
                 hand.SetCards(quads);
+                hand.GetQuad().AddRange(quads);
                 return hand;
             }
 
@@ -701,6 +773,7 @@ namespace GymnasieArbete
                 }
 
                 hand.SetCards(newHand);
+                hand.GetSet().AddRange(set);
                 return hand;
             }
 

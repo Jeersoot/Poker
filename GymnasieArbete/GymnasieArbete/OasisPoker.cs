@@ -209,7 +209,7 @@ namespace GymnasieArbete
             hand.GetCards().Add(deck.GetCards(1)[0]);
             hand = SortAndRankHand(hand);
 
-            balance += 1;
+            UpdateBalance(1);
             player.Debitbalance(1);
 
         }

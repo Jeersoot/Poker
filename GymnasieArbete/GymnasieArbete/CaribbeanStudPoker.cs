@@ -178,6 +178,8 @@ namespace GymnasieArbete
 
         private Hand dealerHand = null;
 
+        private bool skipQualification = false; 
+
         public CaribbeanStudPoker()
         {
 
@@ -234,17 +236,17 @@ namespace GymnasieArbete
             int ante = 1;
             int bid = 2;
 
-            Console.Write(player.GetHand() + "vs " + dealerHand + "- " + player.GetHand().GetRank() + " -");
+            //Console.Write(player.GetHand() + "vs " + dealerHand + "- " + player.GetHand().GetRank() + " -");
 
             // Now start to play
             player.Debitbalance(ante);
-            balance += ante;
+            UpdateBalance(ante);
 
             if (DoCall(player.GetHand()))
             {
                 player.Debitbalance(bid);
                 player.HandleCalls();
-                balance += bid;
+                UpdateBalance(bid);
 
                 if (IsQualified(dealerHand))
                 {
@@ -254,10 +256,10 @@ namespace GymnasieArbete
                         // Player wins, pay out bid * odds, plus initial ante*2 and bid
                         player.Creditbalance(odds * bid + ante*2 + bid);
                         player.HandleWins();
-                        balance -= (odds * bid + ante * 2 + bid);
+                        UpdateBalance(-(odds * bid + ante * 2 + bid));
                         // Casino loses
                         losses++;
-                        Console.WriteLine(" win, odds = " + odds);
+                        //Console.WriteLine(" win, odds = " + odds);
                     }
                     else if (player.GetHand().GetRank() < dealerHand.GetRank())
                     {
@@ -266,7 +268,7 @@ namespace GymnasieArbete
 
                         // Casino wins
                         wins++;
-                        Console.WriteLine(" loss");
+                        //Console.WriteLine(" loss");
                     }
                     else
                     {
@@ -278,7 +280,7 @@ namespace GymnasieArbete
                             player.HandleLoss();
                             // Casino wins
                             wins++;
-                            Console.WriteLine(" loss");
+                            //Console.WriteLine(" loss");
                         }
                         else if (res == -1)
                         {
@@ -286,19 +288,19 @@ namespace GymnasieArbete
                             // Player wins, pay out bid * odds, plus initial ante*2 and bid
                             player.Creditbalance(odds * bid + ante * 2 + bid);
                             player.HandleWins();
-                            balance -= (odds * bid + ante * 2 + bid);
+                            UpdateBalance(-(odds * bid + ante * 2 + bid));
                             // Casino lose
                             losses++;
-                            Console.WriteLine(" win, odds = " + odds);
+                            //Console.WriteLine(" win, odds = " + odds);
                         }
                         else
                         {
                             // Return ante + bid
                             player.Creditbalance(ante + bid);
-                            balance -= (ante + bid);
+                            UpdateBalance(-(ante + bid));
 
                             draws++;
-                            Console.WriteLine(" draw");
+                            //Console.WriteLine(" draw");
                         }
                     }
                 } 
@@ -306,9 +308,9 @@ namespace GymnasieArbete
                 {
                     // Pay back bid and 2*ante
                     player.Creditbalance(ante + ante + bid);
-                    balance -= (ante + ante + bid);
+                    UpdateBalance (-(ante + ante + bid));
                     nq++;
-                    Console.WriteLine(" NQ");
+                    //Console.WriteLine(" NQ");
                 }
             }
             else
@@ -316,7 +318,7 @@ namespace GymnasieArbete
                 // Player folds
                 player.HandleFold();
                 folds++;
-                Console.WriteLine(" fold");
+                //Console.WriteLine(" fold");
             }
         }
 
@@ -365,8 +367,8 @@ namespace GymnasieArbete
                     }
                 }
             }
-
-            return toRet;
+       
+            return toRet || skipQualification;
         }
 
         private int CompareHands(Hand h1, Hand h2)
@@ -556,7 +558,7 @@ namespace GymnasieArbete
                     // Borderline Hands not implemented.
                     // Better safe than sorry -> don't call
                     toRet = false;
-                    Console.WriteLine("Borderline Not Implemented, but wow!!");
+                    //Console.WriteLine("Borderline Not Implemented, but wow!!");
                     break;
             }
             return toRet;
@@ -565,6 +567,12 @@ namespace GymnasieArbete
         public Hand GetDealerHand()
         {
             return dealerHand;
+        }
+
+        public void SkipQualification(bool b)
+        {
+            skipQualification = b;
+
         }
     }
 }
